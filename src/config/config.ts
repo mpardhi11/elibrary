@@ -7,6 +7,7 @@ const _config = {
     url: process.env.MONGO_CONNECTION_STRING || 'mongodb://localhost:27017',
     name: process.env.DB_NAME || 'test',
   },
+  env: process.env.NODE_ENV || 'development',
 };
 
 // Freeze the config object to prevent further changes
