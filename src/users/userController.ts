@@ -4,6 +4,7 @@ import { NextFunction, Request, Response } from 'express';
 import { User } from './userModel';
 import { config } from '../config/config';
 import { sign } from 'jsonwebtoken';
+import { User as IUser } from './userTypes';
 
 async function createUser(req: Request, res: Response, next: NextFunction) {
   const { name = '', email = '', password = '' } = req?.body;
@@ -14,32 +15,44 @@ async function createUser(req: Request, res: Response, next: NextFunction) {
     return next(error);
   }
 
-  // Check if the user already exists in the database
-  const user = await User.findOne({ email });
+  try {
+    // Check if the user already exists in the database
+    const user = await User.findOne({ email });
 
-  if (user) {
-    const error = createHttpError(400, `User already exists with ${email}`);
-    return next(error);
+    if (user) {
+      const error = createHttpError(400, `User already exists with ${email}`);
+      return next(error);
+    }
+  } catch (error) {
+    return next(createHttpError(500, 'Error while checking user in the database'));
   }
 
-  // Save the user object to the database
+  let newUser: IUser;
 
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
+  try {
+    // Save the user object to the database
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
-  const newUser = await User.create({
-    name,
-    email,
-    password: hashedPassword,
-    salt,
-  });
+    newUser = await User.create({
+      name,
+      email,
+      password: hashedPassword,
+      salt,
+    });
+  } catch (error) {
+    return next(createHttpError(500, 'Error while creating user '));
+  }
 
-  // Token generation JWT
+  try {
+    // Token generation JWT
+    const token = sign({ sub: newUser?._id }, config.jwtSecret as string, { expiresIn: '7d' });
 
-  const token = sign({ sub: newUser._id }, config.jwtSecret as string, { expiresIn: '7d' });
-
-  //Send response
-  res.status(201).json({ accessToken: token });
+    //Send response
+    res.status(201).json({ accessToken: token });
+  } catch (error) {
+    return next(createHttpError(500, 'Error while generating token'));
+  }
 }
 
 export { createUser };
