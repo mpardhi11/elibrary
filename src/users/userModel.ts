@@ -8,6 +8,8 @@ const userSchema = new mongoose.Schema<UserInterface>(
     email: { type: String, required: [true, 'Email is required'], unique: true },
 
     password: { type: String, required: [true, 'Password is required'] },
+
+    salt: { type: String, required: true, unique: true },
   },
   {
     timestamps: true,
