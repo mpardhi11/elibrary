@@ -8,6 +8,7 @@ const _config = {
     name: process.env.DB_NAME || 'test',
   },
   env: process.env.NODE_ENV || 'development',
+  jwtSecret: process.env.JWT_SECRET || '',
 };
 
 // Freeze the config object to prevent further changes
