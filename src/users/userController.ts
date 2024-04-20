@@ -4,7 +4,7 @@ import { NextFunction, Request, Response } from 'express';
 import { User } from './userModel';
 import { config } from '../config/config';
 import { sign } from 'jsonwebtoken';
-import { User as IUser } from './userTypes';
+import { User as IUser, LoginUserBody } from './userTypes';
 
 async function createUser(req: Request, res: Response, next: NextFunction) {
   const { name = '', email = '', password = '' } = req?.body;
@@ -46,7 +46,7 @@ async function createUser(req: Request, res: Response, next: NextFunction) {
 
   try {
     // Token generation JWT
-    const token = sign({ sub: newUser?._id }, config.jwtSecret as string, { expiresIn: '7d' });
+    const token = sign({ sub: newUser?._id }, config.jwtSecret as string, { expiresIn: '7d', algorithm: 'HS256' });
 
     //Send response
     res.status(201).json({ accessToken: token });
@@ -55,4 +55,42 @@ async function createUser(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export { createUser };
+async function loginUser(req: Request, res: Response, next: NextFunction) {
+
+  const { email = '', password = '' }: LoginUserBody = req?.body
+
+  if (!email || !password) {
+    const error = createHttpError(400, 'All fields are required');
+    return next(error);
+  }
+
+  let user: IUser | null;
+  try {
+    user = await User.findOne({ email })
+    if (!user) {
+      const error = createHttpError(404, 'User not found');
+      return next(error);
+    }
+  } catch (error) {
+    return next(createHttpError(500, 'Error while checking user in the database'));
+  }
+
+
+  try {
+    const isValidPassword = await bcrypt.compare(password, user.password);
+
+    if (!isValidPassword) {
+      const error = createHttpError(400, 'Username or password is incorrect');
+      return next(error);
+    }
+  } catch (error) {
+    return next(createHttpError(500, 'Error while comparing password'));
+  }
+
+
+  // Token generation JWT
+  const token = sign({ sub: user?._id }, config.jwtSecret as string, { expiresIn: '7d', algorithm: 'HS256' });
+
+  res.json({ message: 'Login' });
+}
+export { createUser, loginUser };
