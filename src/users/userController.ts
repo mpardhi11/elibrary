@@ -91,6 +91,6 @@ async function loginUser(req: Request, res: Response, next: NextFunction) {
   // Token generation JWT
   const token = sign({ sub: user?._id }, config.jwtSecret as string, { expiresIn: '7d', algorithm: 'HS256' });
 
-  res.json({ message: 'Login' });
+  res.json({ accessToken: token });
 }
 export { createUser, loginUser };
