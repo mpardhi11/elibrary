@@ -5,3 +5,8 @@ export interface User {
   password: string;
   salt: string;
 }
+
+export interface LoginUserBody {
+  email: string;
+  password: string;
+}  
