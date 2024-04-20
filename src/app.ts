@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import { errorHandler } from './middlewares/globalErrorHandler';
 import userRouter from './users/userRouter';
+import bookRouter from './book/bookRouter';
 
 const app = express();
 
@@ -16,5 +17,6 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.use('/api/users', userRouter);
+app.use('/api/books', bookRouter);
 app.use(errorHandler);
 export default app;
