@@ -91,3 +91,96 @@ export async function createBook(req: _Request, res: Response, next: NextFunctio
     // Sending a successful response with the ID of the created book
     res.status(201).json({ id: newBook._id });
 }
+
+export async function updateBook(req: _Request, res: Response, next: NextFunction) {
+    const { title = '', genre = '' } = req.body;
+    const bookId = req.params.bookId as string;
+
+    let book: IBook | null;
+
+    try {
+        book = await bookModel.findById({ _id: bookId });
+        if (!book) return next(createHttpError(404, 'Book not found'));
+    } catch (error) {
+        console.error('updateBook ~ error: ', error);
+        return next(createHttpError(400, 'Error while fetching book'));
+    }
+
+    if (book.author.toString() !== req.userId) {
+        return next(createHttpError(403, 'Unauthorized, You are not the author of this book'));
+    }
+
+    const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+
+    let coverImageFilepath: string = "";
+    let coverImageFormat: string = "";
+    let originalCoverImageName: string = ""
+    let pdfPath: string = "";
+    let pdfOriginalName: string = "";
+
+    try {
+        if (files && files.coverImage && files.coverImage[0]) {
+            const coverImageMimeType = files.coverImage[0].mimetype;
+            coverImageFormat = coverImageMimeType.split('/')[1];
+            coverImageFilepath = files.coverImage[0].path;
+            originalCoverImageName = files.coverImage[0].originalname;
+        }
+
+        if (files && files.file && files.file[0]) {
+            pdfPath = files.file[0].path;
+            pdfOriginalName = files.file[0].originalname;
+        }
+    } catch (error) {
+        console.error('updateBook ~ error: ', error);
+        return next(createHttpError(400, 'Error while uploading files'));
+    }
+
+    try {
+        if (coverImageFilepath) {
+            const uploadedCoverImage = await cloudinary.uploader.upload(coverImageFilepath, {
+                filename_override: originalCoverImageName,
+                folder: 'book-covers',
+                format: coverImageFormat,
+                public_id: originalCoverImageName.split('.').slice(0, -1).join('.'),
+            });
+
+            book.coverImage = uploadedCoverImage.secure_url;
+        }
+
+        if (pdfPath) {
+            const uploadedPdf = await cloudinary.uploader.upload(pdfPath, {
+                resource_type: 'raw',
+                filename_override: pdfOriginalName,
+                folder: 'books-pdf',
+                format: 'pdf',
+                public_id: pdfOriginalName.split('.').slice(0, -1).join('.'),
+            });
+
+            book.file = uploadedPdf.secure_url;
+        }
+    } catch (error) {
+        console.error('updateBook ~ error: ', error);
+        return next(createHttpError(400, 'Error while uploading files'));
+    }
+
+    try {
+        if (coverImageFilepath) await fs.unlink(coverImageFilepath);
+        if (pdfPath) await fs.unlink(pdfPath);
+    } catch (error) {
+        console.error('updateBook ~ error: ', error);
+        return next(createHttpError(400, 'Error while deleting files'));
+    }
+    try {
+        if (title) book.title = title;
+        if (genre) book.genre = genre;
+
+        await book.save();
+    } catch (error) {
+        console.error('updateBook ~ error: ', error);
+        return next(createHttpError(400, 'Error while updating book'));
+    }
+
+    return res.json({ book });
+}
+
+

@@ -1,6 +1,7 @@
+import { Document } from "mongoose";
 import { User } from "../users/userTypes";
 
-export interface IBook {
+export interface IBook extends Document {
     _id: string;
     title: string;
     author: User;

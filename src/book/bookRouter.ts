@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { createBook } from './bookController';
+import { createBook, updateBook } from './bookController';
 import multer from 'multer';
 import path from 'node:path';
 import { authenticate } from '../middlewares/authenticate';
@@ -12,13 +12,27 @@ const upload = multer({
     limits: { fileSize: 9.5e6 }, // 9.5MB limit for file size
 });
 
-
 // POST endpoint for creating a new book
 // Path: /api/books
 // Access: Private
-bookRouter.post('/', authenticate, upload.fields([
-    { name: 'coverImage', maxCount: 1 }, // Field for cover image upload (max 1 file)
-    { name: 'file', maxCount: 1 } // Field for book file upload (max 1 file)
-]), createBook);
+bookRouter.post(
+    '/',
+    authenticate,
+    upload.fields([
+        { name: 'coverImage', maxCount: 1 }, // Field for cover image upload (max 1 file)
+        { name: 'file', maxCount: 1 }, // Field for book file upload (max 1 file)
+    ]),
+    createBook,
+);
+
+bookRouter.patch(
+    '/:bookId',
+    authenticate,
+    upload.fields([
+        { name: 'coverImage', maxCount: 1 }, // Field for cover image upload (max 1 file)
+        { name: 'file', maxCount: 1 }, // Field for book file upload (max 1 file)
+    ]),
+    updateBook,
+);
 
 export default bookRouter;
