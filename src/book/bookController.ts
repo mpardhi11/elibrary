@@ -183,4 +183,47 @@ export async function updateBook(req: _Request, res: Response, next: NextFunctio
     return res.json({ book });
 }
 
+/**
+ * 
+ * @param req 
+ * @param res 
+ * @param next 
+ * @returns list of books with author details
+ */
+export async function getBooks(req: Request, res: Response, next: NextFunction) {
+    let books: IBook[];
 
+    try {
+        books = await bookModel.find().populate('author', 'name email -_id');
+    } catch (error) {
+        console.error('getBooks ~ error: ', error);
+        return next(createHttpError(400, 'Error while fetching books'));
+    }
+
+    res.json({ books });
+}
+
+
+/**
+    * 
+    * @param req with bookId 
+    * @param res 
+    * @param next 
+    * 
+    * @returns book with author details
+    */
+export async function getBook(req: Request, res: Response, next: NextFunction) {
+    const bookId = req.params.bookId as string;
+    let book: IBook | null;
+
+    try {
+        book = await bookModel.findById(bookId).populate('author', 'name email -_id');
+
+        if (!book) return next(createHttpError(404, 'Book not found'));
+    } catch (error) {
+        console.error('getBook ~ error: ', error);
+        return next(createHttpError(400, 'Error while fetching book'));
+    }
+
+    res.json({ book });
+}
