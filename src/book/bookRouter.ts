@@ -1,5 +1,5 @@
 import express from 'express';
-import { createBook, updateBook, getBooks, getBook } from './bookController';
+import { createBook, updateBook, getBooks, getBook, deleteBook } from './bookController';
 import multer from 'multer';
 import path from 'node:path';
 import { authenticate } from '../middlewares/authenticate';
@@ -62,5 +62,12 @@ bookRouter.get('/', getBooks);
  * returns {IBook} - A book object
  */
 bookRouter.get('/:bookId', getBook);
+
+/**
+ * DELETE endpoint for deleting a book.
+ * Path: /api/books/:bookId
+ * Access: Private
+ */
+bookRouter.delete('/:bookId', authenticate, deleteBook);
 
 export default bookRouter;
