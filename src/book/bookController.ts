@@ -227,3 +227,37 @@ export async function getBook(req: Request, res: Response, next: NextFunction) {
 
     res.json({ book });
 }
+
+/**
+    * 
+    * @param req 
+    * @param res 
+    * @param next 
+    * 
+    * @returns success message
+    */
+export async function deleteBook(req: _Request, res: Response, next: NextFunction) {
+    const bookId = req.params.bookId as string;
+    let book: IBook | null;
+
+    try {
+        book = await bookModel.findById(bookId);
+        if (!book) return next(createHttpError(404, 'Book not found'));
+    } catch (error) {
+        console.error('deleteBook ~ error: ', error);
+        return next(createHttpError(400, 'Error while fetching book'));
+    }
+
+    if (book.author.toString() !== req.userId) {
+        return next(createHttpError(403, 'Unauthorized, You are not the author of this book'));
+    }
+
+    try {
+        await book.deleteOne();
+    } catch (error) {
+        console.error('deleteBook ~ error: ', error);
+        return next(createHttpError(400, 'Error while deleting book'));
+    }
+
+    res.status(200).json({ message: 'Book deleted successfully' });
+}
