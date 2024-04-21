@@ -9,6 +9,11 @@ const _config = {
   },
   env: process.env.NODE_ENV || 'development',
   jwtSecret: process.env.JWT_SECRET || '',
+  cloudinary: {
+    cloudName: process.env.CLOUDINARY_CLOUD_NAME || '',
+    apiKey: process.env.CLOUDINARY_API_KEY || '',
+    apiSecret: process.env.CLOUDINARY_API_SECRET || '',
+  }
 };
 
 // Freeze the config object to prevent further changes
