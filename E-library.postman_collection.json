@@ -1,0 +1,650 @@
+{
+	"info": {
+		"_postman_id": "c1956b2b-0537-474a-b0f9-18ebaf5e2ef8",
+		"name": "E-library",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20920592"
+	},
+	"item": [
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "createUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"{{$randomUserName}}\",\r\n    \"email\":\"{{$randomEmail}}\",\r\n    \"password\":\"Pass@123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}users/register",
+							"host": [
+								"{{baseUrl}}users"
+							],
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"var res = JSON.parse(responseBody);\r",
+									"console.info(res)\r",
+									"pm.environment.set(\"token\", res.accessToken);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"Harry_Goldner67@yahoo.com\",\r\n    \"password\":\"Pass@123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}users/login",
+							"host": [
+								"{{baseUrl}}users"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Books",
+			"item": [
+				{
+					"name": "Create Book",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Harry Potter and the Sorcerer's Stone",
+									"type": "text"
+								},
+								{
+									"key": "genre",
+									"value": "Novel, Children's literature, Fantasy Fiction, High fantasy",
+									"type": "text"
+								},
+								{
+									"key": "coverImage",
+									"type": "file",
+									"src": "/C:/Users/Mohit/Pictures/Screenshots/Screenshot 2024-04-14 075937.png"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/Mohit/Downloads/Documents/top-50-agile-scrum-master-interview-questions.pdf"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}books",
+							"host": [
+								"{{baseUrl}}books"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Example Create Book",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "title",
+											"value": "Harry Potter and the Sorcerer's Stone",
+											"type": "text"
+										},
+										{
+											"key": "genre",
+											"value": "Novel, Children's literature, Fantasy Fiction, High fantasy",
+											"type": "text"
+										},
+										{
+											"key": "coverImage",
+											"type": "file",
+											"src": "/C:/Users/Mohit/Pictures/Screenshots/Screenshot 2024-04-14 075937.png"
+										},
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/C:/Users/Mohit/Downloads/Documents/top-50-agile-scrum-master-interview-questions.pdf"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}books",
+									"host": [
+										"{{baseUrl}}books"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Bookshelf API"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:3000"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "33"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"21-Z5DrSKOwSP8XQ/bv3pg9RDn9FzE\""
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 21 Apr 2024 13:00:10 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"66250dda2ebb4890531de2c1\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Update Book By ID",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Mohitaa",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "genre",
+									"value": "Children's literature, Fantasy Fiction",
+									"type": "text"
+								},
+								{
+									"key": "coverImage",
+									"type": "file",
+									"src": "/C:/Users/Mohit/Downloads/Untitled (1).png",
+									"disabled": true
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/Mohit/Downloads/Documents/top-50-agile-scrum-master-interview-questions.pdf",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}books/66250dda2ebb4890531de2c1",
+							"host": [
+								"{{baseUrl}}books"
+							],
+							"path": [
+								"66250dda2ebb4890531de2c1"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Example Update Book By ID",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "title",
+											"value": "Mohitaa",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "genre",
+											"value": "Children's literature, Fantasy Fiction",
+											"type": "text"
+										},
+										{
+											"key": "coverImage",
+											"type": "file",
+											"src": "/C:/Users/Mohit/Downloads/Untitled (1).png",
+											"disabled": true
+										},
+										{
+											"key": "file",
+											"type": "file",
+											"src": "/C:/Users/Mohit/Downloads/Documents/top-50-agile-scrum-master-interview-questions.pdf",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}books/66250dda2ebb4890531de2c1",
+									"host": [
+										"{{baseUrl}}books"
+									],
+									"path": [
+										"66250dda2ebb4890531de2c1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Bookshelf API"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:3000"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "517"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"205-vc/VbJDxikRBtFdB+l4ECLh04no\""
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 21 Apr 2024 13:01:00 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"book\": {\n        \"_id\": \"66250dda2ebb4890531de2c1\",\n        \"title\": \"Harry Potter and the Sorcerer's Stone\",\n        \"author\": \"6623954cc00ce4f9d1f0b760\",\n        \"coverImage\": \"https://res.cloudinary.com/duqnfzazq/image/upload/v1713701345/book-covers/Screenshot%202024-04-14%20075937.png\",\n        \"file\": \"https://res.cloudinary.com/duqnfzazq/raw/upload/v1713682408/books-pdf/top-50-agile-scrum-master-interview-questions.pdf\",\n        \"genre\": \"Children's literature, Fantasy Fiction\",\n        \"createdAt\": \"2024-04-21T13:00:10.870Z\",\n        \"updatedAt\": \"2024-04-21T13:01:00.758Z\",\n        \"__v\": 0\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Get All Books",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}books",
+							"host": [
+								"{{baseUrl}}books"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Example Get All Books",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}books",
+									"host": [
+										"{{baseUrl}}books"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Bookshelf API"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:3000"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "499"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"1f3-rJ0hLdwYLNOS9isHlCXG3G28oOw\""
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 21 Apr 2024 12:58:13 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"books\": [\n        {\n            \"_id\": \"66250acdd405e8bad16fb270\",\n            \"title\": \"Master Rst API\",\n            \"author\": {\n                \"name\": \"Blanca_Cronin88\",\n                \"email\": \"Harry_Goldner67@yahoo.com\"\n            },\n            \"coverImage\": \"https://res.cloudinary.com/duqnfzazq/image/upload/v1713701345/book-covers/Screenshot%202024-04-14%20075937.png\",\n            \"file\": \"https://res.cloudinary.com/duqnfzazq/raw/upload/v1713682408/books-pdf/top-50-agile-scrum-master-interview-questions.pdf\",\n            \"genre\": \"Tech\",\n            \"createdAt\": \"2024-04-21T12:47:09.044Z\",\n            \"updatedAt\": \"2024-04-21T12:47:09.044Z\",\n            \"__v\": 0\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Book By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}books/66250acdd405e8bad16fb270",
+							"host": [
+								"{{baseUrl}}books"
+							],
+							"path": [
+								"66250acdd405e8bad16fb270"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Example Get Book By ID",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}books/66250acdd405e8bad16fb270",
+									"host": [
+										"{{baseUrl}}books"
+									],
+									"path": [
+										"66250acdd405e8bad16fb270"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Bookshelf API"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:3000"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "496"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"1f0-K97xoxTAKPE3UbsLRt+XACDJeZM\""
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 21 Apr 2024 12:58:49 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"book\": {\n        \"_id\": \"66250acdd405e8bad16fb270\",\n        \"title\": \"Master Rst API\",\n        \"author\": {\n            \"name\": \"Blanca_Cronin88\",\n            \"email\": \"Harry_Goldner67@yahoo.com\"\n        },\n        \"coverImage\": \"https://res.cloudinary.com/duqnfzazq/image/upload/v1713701345/book-covers/Screenshot%202024-04-14%20075937.png\",\n        \"file\": \"https://res.cloudinary.com/duqnfzazq/raw/upload/v1713682408/books-pdf/top-50-agile-scrum-master-interview-questions.pdf\",\n        \"genre\": \"Tech\",\n        \"createdAt\": \"2024-04-21T12:47:09.044Z\",\n        \"updatedAt\": \"2024-04-21T12:47:09.044Z\",\n        \"__v\": 0\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Book By ID",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}books/66250dda2ebb4890531de2c1",
+							"host": [
+								"{{baseUrl}}books"
+							],
+							"path": [
+								"66250dda2ebb4890531de2c1"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Example Delete Book By ID",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}books/66250dda2ebb4890531de2c1",
+									"host": [
+										"{{baseUrl}}books"
+									],
+									"path": [
+										"66250dda2ebb4890531de2c1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Bookshelf API"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "http://localhost:3000"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "39"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"27-2sU+wH8LsO2HgYqDa0daGODIV30\""
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 21 Apr 2024 13:01:28 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Book deleted successfully\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "test_server_running",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}",
+					"host": [
+						"{{baseUrl}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
