@@ -1,0 +1,11 @@
+{
+  "configurations": [
+    {
+      "type": "node-terminal", // Specifies the type of debugger to use, in this case, a node-terminal debugger.
+      "name": "Run dev server", // Name of the configuration, displayed in the debugger dropdown menu.
+      "request": "launch", // Indicates that VSCode should launch the specified command.
+      "command": "npm run dev", // The command to be executed, which is your npm script for running the development environment.
+      "cwd": "${workspaceFolder}" // Specifies the current working directory for the command to run in. ${workspaceFolder} refers to the root folder of your VSCode workspace.
+    }
+  ]
+}
